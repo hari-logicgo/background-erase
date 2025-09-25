@@ -4,3 +4,6 @@ python-multipart
 gradio_client
 pydantic
 python-dotenv
+pillow          
+pymongo     
+gridfs         

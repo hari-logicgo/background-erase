@@ -1,12 +1,26 @@
-import os
-from fastapi import UploadFile
+from pymongo import MongoClient
+from gridfs import GridFS
+from app.config import MONGO_URI
 
-UPLOAD_DIR = "static/processed"
+client = MongoClient(MONGO_URI)
+db = client['BG_DB']
+fs = GridFS(db)
 
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-
-async def save_file(file: UploadFile, filename: str):
-    file_path = os.path.join(UPLOAD_DIR, filename)
-    with open(file_path, "wb") as f:
-        f.write(await file.read())
-    return file_path
+async def save_file_to_db(file):
+    """
+    Saves an UploadFile to GridFS and returns the file_id
+    """
+    content = await file.read()
+    file_id = fs.put(content, filename=file.filename)
+    return str(file_id)
+    
+def get_file_from_db(file_id):
+    """
+    Returns bytes of file stored in GridFS
+    """
+    from bson import ObjectId
+    try:
+        file_data = fs.get(ObjectId(file_id))
+        return file_data.read(), file_data.filename
+    except Exception:
+        return None, None
