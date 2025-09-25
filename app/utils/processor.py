@@ -5,7 +5,8 @@ client = Client(HF_SPACE)
 
 def remove_bg(image_path: str):
     """
-    Call HF Space to remove background
+    Call HF Space /png endpoint to remove background
+    Returns bytes or base64 string
     """
     result = client.predict(
         f=handle_file(image_path),
