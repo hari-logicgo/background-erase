@@ -5,5 +5,4 @@ gradio_client
 pydantic
 python-dotenv
 pillow          
-pymongo     
-gridfs         
+pymongo            
